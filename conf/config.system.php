@@ -3,7 +3,7 @@
 #
 #	Copyright notice
 #
-#	(c) 2016 Jérôme Schneider <mail@jeromeschneider.fr>
+#	(c) 2017 Jérôme Schneider <mail@jeromeschneider.fr>
 #	All rights reserved
 #
 #	http://baikal-server.com
@@ -69,4 +69,4 @@ define("PROJECT_DB_MYSQL_PASSWORD", '#DBPASS#');
 define("BAIKAL_ENCRYPTION_KEY", '#DESKEY#');
 
 # The currently configured Baïkal version
-define("BAIKAL_CONFIGURED_VERSION", '0.4.4');
+define("BAIKAL_CONFIGURED_VERSION", '0.4.6');

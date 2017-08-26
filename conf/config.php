@@ -3,7 +3,7 @@
 #
 #	Copyright notice
 #
-#	(c) 2016 Jérôme Schneider <mail@jeromeschneider.fr>
+#	(c) 2017 Jérôme Schneider <mail@jeromeschneider.fr>
 #	All rights reserved
 #
 #	http://baikal-server.com

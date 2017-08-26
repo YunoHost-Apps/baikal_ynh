@@ -1,7 +1,7 @@
 {
-    "packaging_format": 1,
     "id": "baikal",
     "name": "Baikal",
+    "packaging_format": 1,
     "description": {
         "en": "Lightweight CalDAV+CardDAV server",
         "fr": "Serveur CalDAV+CardDAV léger"
@@ -14,14 +14,14 @@
         "email": "julien.malik@paraiso.me"
     },
     "multi_instance": false,
-    "requirements": {
-        "yunohost": ">= 2.3.16"
-    },
     "services": [
         "nginx",
         "php5-fpm",
         "mysql"
     ],
+    "requirements": {
+        "yunohost": ">= 2.6.4"
+    },
     "arguments": {
         "install" : [
             {

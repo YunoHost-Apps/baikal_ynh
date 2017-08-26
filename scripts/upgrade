@@ -1,82 +1,156 @@
 #!/bin/bash
 
-# Exit on command errors and treat unset variables as an error
-set -eu
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
 
-# Retrieve app id
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# LOAD SETTINGS
+#=================================================
+
 app=$YNH_APP_INSTANCE_NAME
 
-# Load common variables and helpers
-. ./_common.sh
+domain=$(ynh_app_setting_get $app domain)
+path_url=$(ynh_app_setting_get $app path)
+final_path=$(ynh_app_setting_get $app final_path)
+db_name=$(ynh_app_setting_get $app db_name)
 
-# Retrieve app settings
-domain=$(ynh_app_setting_get "$app" domain)
-path=$(ynh_app_setting_get "$app" path)
-path=${path%/}
+#=================================================
+# ENSURE DOWNWARD COMPATIBILITY
+#=================================================
 
-# Set app specific variables
-dbname=$app
-dbuser=$app
-
-# Check destination directory
-DESTDIR="/var/www/$app"
-[[ ! -d $DESTDIR ]] && ynh_die \
-"The destination directory '$DESTDIR' does not exist.\
- The app is not correctly installed, you should remove it first."
-
-# Create tmp directory and fetch new app inside
-TMPDIR=$(ynh_mkdir_tmp)
-extract_baikal "$TMPDIR"
-
-# Get Specific folder from current installation
-# FIXME: config.php and config.system.php are not updated with possible
-# new or changed configurations
-rm -rf "${TMPDIR}/Specific/*"
-sudo cp -r "${DESTDIR}/Specific/"{config.php,config.system.php} "$TMPDIR/Specific"
-sudo chown -hR "${USER}" "${TMPDIR}/Specific"
-
-# Run Baikal upgrade from tmp directory
-cp -r ../sources/bin "$TMPDIR"
-php "${TMPDIR}/bin/upgrade.sh" \
-  || echo "The Baïkal upgrade failed, you should try to go to " \
-        "https://${domain}${path}/admin/install"
-
-# Install new app and set permissions
-if ! id -u $app > /dev/null 2>&1 ; then
-  sudo useradd -c "$app system account" \
-    -d /var/www/$app --system --user-group $app --shell /usr/sbin/nologin \
-    || ynh_die "Unable to create $app system account"
+if [ -z $final_path ]; then	# If final_path doesn't exist, create it
+	final_path="/var/www/$app"
+	ynh_app_setting_set $app final_path $final_path
 fi
-sudo rm -rf "$DESTDIR"
-sudo mv "$TMPDIR" "$DESTDIR"
-sudo chown -hR root: "$DESTDIR"
-sudo chown $app:root "$DESTDIR/Specific/"{config.php,config.system.php}
-sudo chmod 640 "$DESTDIR/Specific/"{config.php,config.system.php}
+
+#=================================================
+# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
+#=================================================
+
+ynh_backup_before_upgrade	# Backup the current version of the app
+ynh_clean_setup () {
+	ynh_restore_upgradebackup	# restore it if the upgrade fails
+}
+ynh_abort_if_errors	# Active trap pour arrêter le script si une erreur est détectée.
+
+#=================================================
+# CHECK THE PATH
+#=================================================
+
+# Normalize the URL path syntax
+path_url=$(ynh_normalize_url_path $path_url)
+
+#=================================================
+# STANDARD UPGRADE STEPS
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source "$final_path"
+
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+
+# Create a dedicated nginx config
+ynh_add_nginx_config
+
+#=================================================
+# CREATE DEDICATED USER
+#=================================================
+
+# Create a system user
+ynh_system_user_create $app
+
+#=================================================
+# PHP-FPM CONFIGURATION
+#=================================================
+
+# Create a dedicated php-fpm config
+ynh_add_fpm_config
+
+#=================================================
+# SPECIFIC UPGRADE
+#=================================================
+# UPGRADE BAIKAL
+#=================================================
+
+# Run Baikal upgrade
+php "${final_path}/bin/upgrade.sh"
 
 # Cleanup old baikal-admin sessions
 # since we may have changed owner of the session file
-sudo grep -lr "CSRF_TOKEN|s:" /var/lib/php5/sessions | xargs sudo rm
+grep -lr "CSRF_TOKEN|s:" /var/lib/php5/sessions | xargs rm -f
 
-# Copy and set nginx configuration
-nginx_conf="/etc/nginx/conf.d/${domain}.d/${app}.conf"
-sed -i "s@{PATH}@${path}@g"        ../conf/nginx.conf
-sed -i "s@{LOCATION}@${path:-/}@g" ../conf/nginx.conf
-sed -i "s@{DESTDIR}@${DESTDIR}@g"  ../conf/nginx.conf
-sed -i "s@{POOLNAME}@${app}@g"     ../conf/nginx.conf
-sudo cp ../conf/nginx.conf "$nginx_conf"
+#=================================================
+# UPGRADE BAIKAL CONFIGURATION
+#=================================================
 
-# Copy and set php-fpm configuration
-phpfpm_conf="/etc/php5/fpm/pool.d/${app}.conf"
-sed -i "s@{POOLNAME}@${app}@g"     ../conf/php-fpm.conf
-sed -i "s@{DESTDIR}@${DESTDIR}/@g" ../conf/php-fpm.conf
-sed -i "s@{USER}@${app}@g" ../conf/php-fpm.conf
-sed -i "s@{GROUP}@${app}@g" ../conf/php-fpm.conf
-sudo cp ../conf/php-fpm.conf "$phpfpm_conf"
+bk_conf="${final_path}/Specific/config.php"
+# Verify the checksum and backup the file if it's different
+ynh_backup_if_checksum_is_different "$bk_conf"
+cp ../conf/config.php "$bk_conf"
 
-# Set SSOwat rules
+ynh_replace_string "#TIMEZONE#" "$(cat /etc/timezone)" "$bk_conf"
+
+password_hash=$(ynh_app_setting_get $app password_hash)
+# If the password_hash is not in the app's config, recreate it from the password.
+if [ -z "$password_hash" ]; then
+    password=$(ynh_app_setting_get $app password)
+    password_hash=$(echo -n admin:BaikalDAV:$password | md5sum | cut -d ' ' -f 1)
+    ynh_app_setting_set $app password_hash $password_hash
+fi
+ynh_replace_string "#PASSWORDHASH#" "${password_hash}" "$bk_conf"
+
+# Store the config file checksum into the app settings
+ynh_store_file_checksum "$bk_conf"
+
+bk_conf="${final_path}/Specific/config.system.php"
+# Verify the checksum and backup the file if it's different
+ynh_backup_if_checksum_is_different "$bk_conf"
+cp ../conf/config.system.php "$bk_conf"
+
+ynh_replace_string "#PATH#" "$path_url"     "$bk_conf"
+ynh_replace_string "#DBNAME#" "$db_name" "$bk_conf"
+ynh_replace_string "#DBUSER#" "$db_name" "$bk_conf"
+db_pwd=$(ynh_app_setting_get $app mysqlpwd)
+ynh_replace_string "#DBPASS#" "$db_pwd" "$bk_conf"
+
+deskey=$(ynh_app_setting_get $app deskey)
+ynh_replace_string "#DESKEY#" "$deskey" "$bk_conf"
+
+# Store the config file checksum into the app settings
+ynh_store_file_checksum "$bk_conf"
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
+
+# Set permissions
+chown -R root: "$final_path"
+chown $app "$final_path/Specific/"{config.php,config.system.php}
+chmod 640 "$final_path/Specific/"{config.php,config.system.php}
+
+#=================================================
+# SETUP SSOWAT
+#=================================================
+
+# Allow public access on /
 ynh_app_setting_set "$app" skipped_uris "/"
+# But restrain on /admin
 ynh_app_setting_set "$app" protected_uris "/admin/"
 
-# Reload services
-sudo service php5-fpm restart || true
-sudo service nginx reload || true
+#=================================================
+# RELOAD NGINX
+#=================================================
+
+systemctl reload nginx

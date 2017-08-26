@@ -1,62 +1,94 @@
 #!/bin/bash
 
-# Exit on command errors and treat unset variables as an error
+#=================================================
+# GENERIC START
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
+# Exit on command errors and treat access to unset variables as an error
 set -eu
 
-# Retrieve app id
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+if [ ! -e _common.sh ]; then
+	# Get the _common.sh file if it's not in the current directory
+	cp ../settings/scripts/_common.sh ./_common.sh
+	chmod a+rx _common.sh
+fi
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# LOAD SETTINGS
+#=================================================
+
 app=$YNH_APP_INSTANCE_NAME
 
-# Source app helpers
-. /usr/share/yunohost/helpers
+domain=$(ynh_app_setting_get $app domain)
+path_url=$(ynh_app_setting_get $app path)
+final_path=$(ynh_app_setting_get $app final_path)
+db_name=$(ynh_app_setting_get $app db_name)
 
-# Retrieve old app settings
-domain=$(ynh_app_setting_get "$app" domain)
-path=$(ynh_app_setting_get "$app" path)
-dbpass=$(ynh_app_setting_get "$app" mysqlpwd)
+#=================================================
+# CHECK IF THE APP CAN BE RESTORED
+#=================================================
 
-# Set app specific variables
-dbname=$app
-dbuser=$app
+ynh_webpath_available $domain $path_url \
+	|| ynh_die "Path not available: ${domain}${path_url}"
+test ! -d $final_path \
+	|| ynh_die "There is already a directory: $final_path "
 
-# Check domain/path availability
-sudo yunohost app checkurl "${domain}${path}" -a "$app" \
-  || exit 1
+#=================================================
+# STANDARD RESTORATION STEPS
+#=================================================
+# RESTORE THE NGINX CONFIGURATION
+#=================================================
 
-# Check destination directory
-DESTDIR="/var/www/$app"
-[[ -d $DESTDIR ]] && ynh_die \
-"The destination directory '$DESTDIR' already exists.\
- You should safely delete it before restoring this app."
+ynh_restore_file "/etc/nginx/conf.d/$domain.d/$app.conf"
 
-# Check configuration files
-nginx_conf="/etc/nginx/conf.d/${domain}.d/${app}.conf"
-[[ -f $nginx_conf ]] && ynh_die \
-"The NGINX configuration already exists at '${nginx_conf}'.
- You should safely delete it before restoring this app."
-phpfpm_conf="/etc/php5/fpm/pool.d/${app}.conf"
-[[ -f $phpfpm_conf ]] && ynh_die \
-"The PHP FPM configuration already exists at '${phpfpm_conf}'.
- You should safely delete it before restoring this app."
+#=================================================
+# RESTORE THE APP MAIN DIR
+#=================================================
 
-# Restore the app files and set permissions
-sudo cp -a ./sources "$DESTDIR"
-if ! id -u $app > /dev/null 2>&1 ; then
-  sudo useradd -c "$app system account" \
-    -d /var/www/$app --system --user-group $app --shell /usr/sbin/nologin \
-    || ynh_die "Unable to create $app system account"
-fi
-sudo chown -hR root: "$DESTDIR"
-sudo chown $app:root "$DESTDIR/Specific/"{config.php,config.system.php}
-sudo chmod 640 "$DESTDIR/Specific/"{config.php,config.system.php}
+ynh_restore_file "$final_path"
 
-# Create and restore the database
-ynh_mysql_create_db "$dbname" "$dbuser" "$dbpass"
-ynh_mysql_connect_as "$dbuser" "$dbpass" "$dbname" < ./dump.sql
+#=================================================
+# RESTORE THE MYSQL DATABASE
+#=================================================
 
-# Restore configuration files
-sudo cp -a ./nginx.conf   "$nginx_conf"
-sudo cp -a ./php-fpm.conf "$phpfpm_conf"
+db_pwd=$(ynh_app_setting_get $app mysqlpwd)
+ynh_mysql_setup_db $db_name $db_name $db_pwd
+ynh_mysql_connect_as $db_name $db_pwd $db_name < ./db.sql
 
-# Reload services
-sudo service php5-fpm restart || true
-sudo service nginx reload || true
+#=================================================
+# RECREATE THE DEDICATED USER
+#=================================================
+
+# Create the dedicated user (if not existing)
+ynh_system_user_create $app
+
+#=================================================
+# RESTORE USER RIGHTS
+#=================================================
+
+# Set permissions
+chown -R root: "$final_path"
+chown $app "$final_path/Specific/"{config.php,config.system.php}
+
+#=================================================
+# RESTORE THE PHP-FPM CONFIGURATION
+#=================================================
+
+ynh_restore_file "/etc/php5/fpm/pool.d/$app.conf"
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# RELOAD NGINX AND PHP-FPM
+#=================================================
+
+systemctl reload php5-fpm
+systemctl reload nginx

@@ -1,4 +1,4 @@
---- /dev/null
+--- b/Core/Frameworks/Baikal/Core/AbstractExternalAuth.php
 +++ b/Core/Frameworks/Baikal/Core/AbstractExternalAuth.php
 @@ -0,0 +1,130 @@
 +<?php
@@ -131,7 +131,7 @@
 +    }
 +
 +}
---- /dev/null
+--- b/Core/Frameworks/Baikal/Core/LDAPUserBindAuth.php
 +++ b/Core/Frameworks/Baikal/Core/LDAPUserBindAuth.php
 @@ -0,0 +1,75 @@
 +<?php

@@ -1,0 +1,6 @@
+SOURCE_URL=https://github.com/fruux/Baikal/releases/download/0.4.6/baikal-0.4.6.zip
+SOURCE_SUM=946e8e4161f7ef84be42430b6e9d3bb7dd4bbbe241b409be208c14447d7aa7a6
+SOURCE_SUM_PRG=sha256sum
+SOURCE_FORMAT=zip
+SOURCE_IN_SUBDIR=true
+SOURCE_FILENAME=
