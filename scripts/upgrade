@@ -64,6 +64,20 @@ ynh_setup_source "$final_path"
 # NGINX CONFIGURATION
 #=================================================
 
+# Delete current nginx configuration to be able to check if .well-known is already served.
+ynh_remove_nginx_config
+ynh_app_setting_delete $app "checksum__etc_nginx_conf.d_$domain.d_$app.conf" || true
+# Do not serve .well-known if it's already served on the domain
+if is_url_handled "https://${domain}/.well-known/caldav" ; then
+    sed -ri '/^location = \/\.well\-known\/(caldav|carddav) \{/,/\}/d' \
+	"../conf/nginx.conf"
+fi
+
+# Handle root path, avoid double slash.
+# Temporary fix, in waiting for an upgrade of the helper. (#361)
+#path_url_slash_less=${path_url%/}
+#ynh_replace_string "__PATH__/" "$path_url_slash_less/" "../conf/nginx.conf"
+
 # Create a dedicated nginx config
 ynh_add_nginx_config
 

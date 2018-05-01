@@ -1,5 +1,18 @@
 #!/bin/bash
 
+#=================================================
+# COMMON HELPERS -- SHOULD BE ADDED TO YUNOHOST
+#=================================================
+
+# Check if an URL is already handled
+# usage: is_url_handled URL
+is_url_handled() {
+  local output=($(curl -k -s -o /dev/null \
+      -w 'x%{redirect_url} %{http_code}' "$1"))
+  # It's handled if it does not redirect to the SSO nor return 404
+  [[ ! ${output[0]} =~ \/yunohost\/sso\/ && ${output[1]} != 404 ]]
+}
+
 # ============= FUTURE YUNOHOST HELPER =============
 # Delete a file checksum from the app settings
 #
