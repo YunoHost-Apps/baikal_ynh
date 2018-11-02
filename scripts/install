@@ -6,7 +6,7 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source ./_common.sh
+source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -70,10 +70,12 @@ ynh_setup_source "$final_path"
 # NGINX CONFIGURATION
 #=================================================
 
-# Do not serve .well-known if it's already served on the domain
-if https://github.com/YunoHost-Apps/nextcloud_ynh/blob/962cc61ec8ffb045d89dd460cf8b55778d862ffc/scripts/install "https://${domain}/.well-known/caldav" ; then
-    sed -ri '/^location = \/\.well\-known\/(caldav|carddav) \{/,/\}/d' \
-	"../conf/nginx.conf"
+# Exits if another app serves "https://${domain}/.well-known/caldav" and display an error message for user
+# Waiting for Yunohost to handles this kind of conflict https://github.com/YunoHost-Apps/baikal_ynh/issues/17
+echo "je suis devant le if"
+if is_url_handled_custom "https://${domain}/.well-known/caldav" ; then
+    echo "je passe dans le if"
+    ynh_die "Baikal cannot be installed because of a conflit with another application, Nextcloud usually. This app handles the location where you want to install Baikal (https://${domain}/.well-known/caldav). You can either install Baikal on another domain, subdomain or move Nextcloud to another location"
 fi
 
 # Taken from https://github.com/YunoHost-Apps/nextcloud_ynh/blob/962cc61ec8ffb045d89dd460cf8b55778d862ffc/scripts/install

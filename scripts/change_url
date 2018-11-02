@@ -42,6 +42,17 @@ new_path=$(ynh_normalize_url_path $new_path)
 old_path=$(ynh_normalize_url_path $old_path)
 
 #=================================================
+# CHECK IF THE APP CAN BE MOVED WITH THESE ARGS
+#=================================================
+
+# FIXME Does not work as expected for now (See install script)
+# Exits if another app serves "https://${domain}/.well-known/caldav" and display an error message for user
+# Waiting for Yunohost to handles this kind of conflict https://github.com/YunoHost-Apps/baikal_ynh/issues/17
+if is_url_handled "https://${domain}/.well-known/caldav" ; then
+    ynh_die "Baikal cannot be installed because of a conflit with another application, Nextcloud usually. This app handles the location where you want to install Baikal (https://${domain}/.well-known/caldav). You can either install Baikal on another domain, subdomain or move Nextcloud to another location"
+fi
+
+#=================================================
 # CHECK WHICH PARTS SHOULD BE CHANGED
 #=================================================
 

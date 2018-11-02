@@ -13,6 +13,18 @@ is_url_handled() {
   [[ ! ${output[0]} =~ \/yunohost\/sso\/ && ${output[1]} != 404 ]]
 }
 
+is_url_handled_custom() {
+  local output=($(curl -k -s -o /dev/null \
+      -w 'x%{redirect_url} %{http_code}' "$1"))
+  echo "¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤"
+  echo "contenu variable 'output' : $output"
+  echo "¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤"
+  # It's handled if it does not redirect to the SSO nor return 404
+  [[ ! ${output[0]} =~ \/yunohost\/sso\/ && ${output[1]} != 404 ]]
+  #[[ ! ${output[0]} =~ \/yunohost\/sso\/ ]] && [[ ${output[1]} != 404 ]]
+  #[[ ! ${output[0]} =~ \/yunohost\/sso\/ ]]
+}
+
 # ============= FUTURE YUNOHOST HELPER =============
 # Delete a file checksum from the app settings
 #
