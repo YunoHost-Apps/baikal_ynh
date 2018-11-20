@@ -6,7 +6,7 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
-#source _common.sh
+source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -144,6 +144,12 @@ ynh_store_file_checksum "$bk_conf"
 chown -R root: "$final_path"
 chown $app "$final_path/Specific/"{config.php,config.system.php}
 chmod 640 "$final_path/Specific/"{config.php,config.system.php}
+
+#=================================================
+# SETUP FAIL2BAN
+#=================================================
+
+ynh_add_fail2ban_config "/var/log/nginx/$domain-access.log" "<HOST>.*PROPFIND /baikal.*401 295.*$" 5
 
 #=================================================
 # SETUP SSOWAT

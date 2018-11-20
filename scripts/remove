@@ -6,13 +6,13 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
-#if [ ! -e _common.sh ]; then
-#	# Get file fonction if not been to the current directory
-#	sudo cp ../settings/scripts/_common.sh ./_common.sh
-#	sudo chmod a+rx _common.sh
-#fi
+if [ ! -e _common.sh ]; then
+	# Get file fonction if not been to the current directory
+	sudo cp ../settings/scripts/_common.sh ./_common.sh
+	sudo chmod a+rx _common.sh
+fi
 # Source app helpers
-#source _common.sh
+source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -54,6 +54,12 @@ ynh_remove_nginx_config
 
 # Remove the dedicated php-fpm config
 ynh_remove_fpm_config
+
+#=================================================
+# REMOVE FAIL2BAN CONFIGURATION
+#=================================================
+
+ynh_remove_fail2ban_config
 
 #=================================================
 # GENERIC FINALIZATION
