@@ -25,6 +25,27 @@ is_url_handled_custom() {
   #[[ ! ${output[0]} =~ \/yunohost\/sso\/ ]]
 }
 
+is_url_handled_rewrited() {
+    local url="$1"
+    # Try to get the url with curl, and keep the http code and an eventual redirection url.
+    local curl_output="$(curl --insecure --silent --output /dev/null \
+      --write-out '%{http_code};%{redirect_url}' "$url")"
+ 
+    # Cut the output and keep only the first part to keep the http code
+    local http_code="${curl_output%%;*}"
+    # Do the same thing but keep the second part, the redirection url
+    local redirection="${curl_output#*;}"
+ 
+    # Return 1 if the url isn't handled.
+    # Return 1 if the url has returned 404
+    if [ "$http_code" = "404" ]; then
+        return 1
+    # Return 1 if the url is redirected to the SSO
+    elif [[ $redirection =~ "/yunohost/sso" ]]; then
+        return 1
+    fi
+}
+
 # ============= FUTURE YUNOHOST HELPER =============
 # Delete a file checksum from the app settings
 #
