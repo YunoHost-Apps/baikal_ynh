@@ -30,6 +30,21 @@ app=$YNH_APP_INSTANCE_NAME
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
 
+# Stop installation if another app serves "https://${domain}/.well-known/caldav"
+## Waiting for Yunohost to handles this kind of conflict
+## See https://github.com/YunoHost-Apps/baikal_ynh/issues/17
+error_text="Baikal cannot be installed because of a conflit with another application, Nextcloud usually. This app handles the location where you want to install Baikal (https://${domain}/.well-known/caldav). You can either install Baikal on another domain, subdomain or move Nextcloud to another location"
+
+if is_url_handled_rewrited "https://${domain}/.well-known/caldav"; then
+    ynh_die "$error_text"
+fi
+
+# Same test for path "/.well-known/carddav"
+if is_url_handled_rewrited "https://${domain}/.well-known/carddav"; then
+    ynh_die "$error_text"
+fi
+
+
 # Normalize the url path syntax
 path_url=$(ynh_normalize_url_path $path_url)
 
@@ -69,22 +84,6 @@ ynh_setup_source "$final_path"
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-
-# Exits if another app serves "https://${domain}/.well-known/caldav" and display an error message for user
-# Waiting for Yunohost to handles this kind of conflict https://github.com/YunoHost-Apps/baikal_ynh/issues/17
-echo "je suis devant le if"
-if is_url_handled_custom "https://${domain}/.well-known/caldav" ; then
-    echo "je passe dans le if"
-    ynh_die "Baikal cannot be installed because of a conflit with another application, Nextcloud usually. This app handles the location where you want to install Baikal (https://${domain}/.well-known/caldav). You can either install Baikal on another domain, subdomain or move Nextcloud to another location"
-fi
-
-# Taken from https://github.com/YunoHost-Apps/nextcloud_ynh/blob/962cc61ec8ffb045d89dd460cf8b55778d862ffc/scripts/install
-# Commented for now
-#
-# Handle root path, avoid double slash.
-# Temporary fix, in waiting for an upgrade of the helper. (#361)
-#path_url_slash_less=${path_url%/}
-#ynh_replace_string "__PATH__/" "$path_url_slash_less/" "../conf/nginx.conf"
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
