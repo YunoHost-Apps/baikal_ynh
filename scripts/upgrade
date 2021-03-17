@@ -21,6 +21,7 @@ path_url=$(ynh_app_setting_get --app=$app --key=path)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
 phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
+db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
 
 #=================================================
 # CHECK VERSION
@@ -43,6 +44,18 @@ fi
 if [ -z "$db_name" ]; then
 	db_name=$(ynh_sanitize_dbid --db_name=$app)
 	ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+fi
+
+# Cleaning legacy permissions
+if ynh_legacy_permissions_exists; then
+	ynh_legacy_permissions_delete_all
+
+	ynh_app_setting_delete --app=$app --key=is_public
+fi
+
+if ! ynh_permission_exists --permission="admin"; then
+	# Create the required permissions
+	ynh_permission_create --permission="admin" --url="/admin" --allowed="all_users"
 fi
 
 #=================================================
@@ -142,11 +155,9 @@ then
 		ynh_app_setting_set --app=$app --key=password_hash --value=$password_hash
 	fi
 	ynh_replace_string --match_string="__PASSWORDHASH__" --replace_string="${password_hash}" --target_file="$bk_conf"
-
 	ynh_replace_string --match_string="__PATH__" --replace_string="${path_url%/}" --target_file="$bk_conf"
 	ynh_replace_string --match_string="__DBNAME__" --replace_string="$db_name" --target_file="$bk_conf"
 	ynh_replace_string --match_string="__DBUSER__" --replace_string="$db_name" --target_file="$bk_conf"
-	db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
 	ynh_replace_string --match_string="__DBPASS__" --replace_string="$db_pwd" --target_file="$bk_conf"
 
 	deskey=$(ynh_app_setting_get --app=$app --key=encrypt_key)
@@ -182,23 +193,6 @@ fi
 chown -R root: "$final_path"
 chown $app "$final_path/config/baikal.yaml"
 chmod 640 "$final_path/config/baikal.yaml"
-
-#=================================================
-# SETUP SSOWAT
-#=================================================
-ynh_script_progression --message="Configuring SSOwat..." --weight=2
-
-# Upgrade from the legacy permissions system
-protected_uris=$(ynh_app_setting_get --app="$app" --key=protected_uris)
-
-if [ -n "${protected_uris}" ]; then
-    ynh_app_setting_delete --app="$app" --key=protected_uris
-
-    # Allow public access on /
-    ynh_permission_update --permission "main"  --add "visitors"
-    # But restrain on /admin
-    ynh_permission_create --permission "admin" --url "/admin" --allowed "all_users"
-fi
 
 #=================================================
 # RELOAD NGINX
