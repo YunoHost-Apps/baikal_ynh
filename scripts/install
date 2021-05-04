@@ -116,25 +116,14 @@ ynh_mysql_connect_as --user=$db_name --password="$db_pwd" --database=$db_name \
 #=================================================
 
 bk_conf="${final_path}/config/baikal.yaml"
-cp ../conf/baikal.yaml "$bk_conf"
-
-ynh_replace_string --match_string="__TIMEZONE__" --replace_string="$(cat /etc/timezone)" --target_file="$bk_conf"
-# Create admin password hash
+timezone=$(cat /etc/timezone)
 password_hash=$(echo -n admin:BaikalDAV:$password | sha256sum | cut -d ' ' -f 1)
-ynh_replace_string --match_string="__PASSWORDHASH__" --replace_string="${password_hash}" --target_file="$bk_conf"
 ynh_app_setting_set --app=$app --key=password_hash --value=$password_hash
-
-ynh_replace_string --match_string="__PATH__" --replace_string="${path_url%/}" --target_file="$bk_conf"
-ynh_replace_string --match_string="__DBNAME__" --replace_string="$db_name" --target_file="$bk_conf"
-ynh_replace_string --match_string="__DBUSER__" --replace_string="$db_name" --target_file="$bk_conf"
-ynh_replace_string --match_string="__DBPASS__" --replace_string="$db_pwd" --target_file="$bk_conf"
-
+path=${path_url%/}
 deskey=$(ynh_string_random 24)
 ynh_app_setting_set --app=$app --key=encrypt_key --value="$deskey"
-ynh_replace_string --match_string="__DESKEY__" --replace_string="$deskey" --target_file="$bk_conf"
 
-# Store the config file checksum into the app settings
-ynh_store_file_checksum --file="$bk_conf"
+ynh_add_config --template="../conf/baikal.yaml" --destination="$bk_conf"
 
 # Disable installation
 touch "${final_path}/Specific/INSTALL_DISABLED"

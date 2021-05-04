@@ -11,7 +11,7 @@
 		setup_private=0
 		setup_public=0
 		upgrade=1
-		upgrade=1	from_commit=7960d347424cb1cb931c91f2628dd829288184e1
+		upgrade=1	from_commit=099f63413f120982232a77fd4ff5f62530d546ad
 		backup_restore=1
 		multi_instance=0
 		change_url=1
@@ -19,6 +19,6 @@
 Email=
 Notification=none
 ;;; Upgrade options
-	; commit=7960d347424cb1cb931c91f2628dd829288184e1
-		name=bump baikal to 0.5.3
+	; commit=099f63413f120982232a77fd4ff5f62530d546ad
+		name=Testing (#57)
 		manifest_arg=domain=DOMAIN&path=PATH&password=mysecret&

@@ -5,7 +5,7 @@ system:
     cal_enabled: true
     invite_from: 'noreply@localhost'
     dav_auth_type: 'LDAP-UserBind'
-    admin_passwordhash: __PASSWORDHASH__
+    admin_passwordhash: __PASSWORD_HASH__
     auth_realm: BaikalDAV
     base_uri: '__PATH__'
 # Auth Backend LDAP-UserBind; LDAP URI
@@ -24,6 +24,6 @@ database:
     sqlite_file: "absolute/path/to/Specific/db/db.sqlite"
     mysql: true
     mysql_host: 'localhost'
-    mysql_dbname: '__DBNAME__'
-    mysql_username: '__DBUSER__'
-    mysql_password: '__DBPASS__'
+    mysql_dbname: '__DB_NAME__'
+    mysql_username: '__DB_NAME__'
+    mysql_password: '__DB_PWD__'
