@@ -22,6 +22,7 @@ final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
 phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
+password_hash=$(ynh_app_setting_get --app=$app --key=password_hash)
 
 #=================================================
 # CHECK VERSION
@@ -142,27 +143,19 @@ then
 	#=================================================
 	ynh_script_progression --message="Upgrading Baïkal configuration..." --weight=2
 
-	bk_conf="${final_path}/config/baikal.yaml"
-	ynh_backup_if_checksum_is_different --file="$bk_conf"
-	cp ../conf/baikal.yaml "$bk_conf"
-
-	ynh_replace_string --match_string="__TIMEZONE__" --replace_string="$(cat /etc/timezone)" --target_file="$bk_conf"
-	password_hash=$(ynh_app_setting_get --app=$app --key=password_hash)
-	# If the password_hash is not in the app's config, recreate it from the password.
 	if [ -z "$password_hash" ]; then
 		password=$(ynh_app_setting_get --app=$app --key=password)
 		password_hash=$(echo -n admin:BaikalDAV:$password | md5sum | cut -d ' ' -f 1)
 		ynh_app_setting_set --app=$app --key=password_hash --value=$password_hash
 	fi
-	ynh_replace_string --match_string="__PASSWORDHASH__" --replace_string="${password_hash}" --target_file="$bk_conf"
-	ynh_replace_string --match_string="__PATH__" --replace_string="${path_url%/}" --target_file="$bk_conf"
-	ynh_replace_string --match_string="__DBNAME__" --replace_string="$db_name" --target_file="$bk_conf"
-	ynh_replace_string --match_string="__DBUSER__" --replace_string="$db_name" --target_file="$bk_conf"
-	ynh_replace_string --match_string="__DBPASS__" --replace_string="$db_pwd" --target_file="$bk_conf"
 
+	bk_conf="${final_path}/config/baikal.yaml"
+	timezone=$(cat /etc/timezone)
+	path=${path_url%/}
 	deskey=$(ynh_app_setting_get --app=$app --key=encrypt_key)
 	ynh_app_setting_set --app=$app --key=encrypt_key --value="$deskey"
-	ynh_replace_string --match_string="__DESKEY__" --replace_string="$deskey" --target_file="$bk_conf"
+
+	ynh_add_config --template="../conf/baikal.yaml" --destination="$bk_conf"
 
 	#=================================================
 	# UPGRADE BAIKAL
