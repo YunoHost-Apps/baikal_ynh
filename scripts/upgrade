@@ -184,7 +184,6 @@ fi
 
 # Set permissions
 chown -R root: "$final_path"
-chmod -R o-rwx "$final_path"
 chown $app "$final_path/config/baikal.yaml"
 chmod 640 "$final_path/config/baikal.yaml"
 

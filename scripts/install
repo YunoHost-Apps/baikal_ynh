@@ -136,7 +136,6 @@ touch "${final_path}/Specific/INSTALL_DISABLED"
 
 # Set permissions
 chown -R root: "$final_path"
-chmod -R o-rwx "$final_path"
 chown $app "$final_path/config/baikal.yaml"
 chmod 640 "$final_path/config/baikal.yaml"
 
@@ -146,7 +145,7 @@ chmod 640 "$final_path/config/baikal.yaml"
 ynh_script_progression --message="Configuring permissions..." --weight=2
 
 # Allow public access on /
-ynh_permission_update --permission="main" --add="visitors"
+ynh_permission_update --permission="main"  --add="visitors"
 # But restrain on /admin
 ynh_permission_create --permission="admin" --url="/admin" --allowed="all_users"
 
