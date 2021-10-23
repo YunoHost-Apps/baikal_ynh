@@ -10,7 +10,7 @@ If you don't have YunoHost, please see [here](https://yunohost.org/install) to k
 [Baïkal](http://baikal-server.com/) is a CalDAV and CardDAV server, based on
 sabre/dav, that includes an administration interface for easy management.
 
-**Shipped version:** 0.7.1
+**Shipped version:** 0.8.0
 
 ## Screenshots
 
