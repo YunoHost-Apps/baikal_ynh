@@ -93,7 +93,7 @@ ynh_mysql_connect_as --user=$db_user --password=$db_pwd --database=$db_name < ./
 #=================================================
 
 # Set permissions
-chown $app "$final_path/config/baikal.yaml"
+chown $app: "$final_path/config/baikal.yaml"
 chmod 640 "$final_path/config/baikal.yaml"
 
 #=================================================

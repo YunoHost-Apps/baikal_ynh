@@ -188,7 +188,7 @@ fi
 #=================================================
 
 # Set permissions
-chown $app "$final_path/config/baikal.yaml"
+chown $app: "$final_path/config/baikal.yaml"
 chmod 640 "$final_path/config/baikal.yaml"
 
 #=================================================
