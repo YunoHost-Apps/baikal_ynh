@@ -1,0 +1,84 @@
+diff --git a/Core/Frameworks/Baikal/Core/Server.php b/Core/Frameworks/Baikal/Core/Server.php
+index e96fe39..b90b49e 100644
+--- a/Core/Frameworks/Baikal/Core/Server.php
++++ b/Core/Frameworks/Baikal/Core/Server.php
+@@ -133,6 +133,8 @@ class Server {
+ 
+         if ($this->authType === 'Basic') {
+             $authBackend = new \Baikal\Core\PDOBasicAuth($this->pdo, $this->authRealm);
++        } elseif ($this->authType === 'LDAP-UserBind') {
++            $authBackend = new \Baikal\Core\LDAPUserBindAuth($this->pdo, $this->authRealm);
+         } else {
+             $authBackend = new \Sabre\DAV\Auth\Backend\PDO($this->pdo);
+             $authBackend->setRealm($this->authRealm);
+diff --git a/Core/Frameworks/Baikal/Model/Config/Standard.php b/Core/Frameworks/Baikal/Model/Config/Standard.php
+index 1ef5a51..32ec217 100644
+--- a/Core/Frameworks/Baikal/Model/Config/Standard.php
++++ b/Core/Frameworks/Baikal/Model/Config/Standard.php
+@@ -51,6 +51,22 @@ class Standard extends \Baikal\Model\Config {
+             "type"    => "string",
+             "comment" => "HTTP authentication type for WebDAV; default Digest"
+         ],
++        "dav_ldap_uri" => [
++            "type" => "string",
++            "comment" => "URI to LDAP Server (for ldap-userbind auth); default ldapi:///"
++        ],
++        "dav_ldap_dn_template" => [
++            "type" => "string",
++            "comment" => "User DN for bind; with replacments %n => username, %u => user part, %d => domain part of username"
++        ],
++        "dav_ldap_displayname_attr" => [
++            "type" => "string",
++            "comment" => "LDAP-attribute for displayname; default cn"
++        ],
++        "dav_ldap_email_attr" => [
++            "type" => "string",
++            "comment" => "LDAP-attribute for email; default mail"
++        ],
+         "admin_passwordhash" => [
+             "type"    => "string",
+             "comment" => "Baïkal Web admin password hash; Set via Baïkal Web Admin",
+@@ -64,6 +80,10 @@ class Standard extends \Baikal\Model\Config {
+         "card_enabled"       => true,
+         "cal_enabled"        => true,
+         "dav_auth_type"      => "Digest",
++        "dav_ldap_uri"              => "ldapi:///",
++        "dav_ldap_dn_template"      => "uid=%n,dc=example,dc=com",
++        "dav_ldap_displayname_attr" => "cn",
++        "dav_ldap_email_attr"       => "mail",
+         "admin_passwordhash" => "",
+         "auth_realm"         => "BaikalDAV",
+         "base_uri"           => ""
+@@ -103,7 +123,31 @@ class Standard extends \Baikal\Model\Config {
+         $oMorpho->add(new \Formal\Element\Listbox([
+             "prop"    => "dav_auth_type",
+             "label"   => "WebDAV authentication type",
+-            "options" => ["Digest", "Basic"]
++            "options" => ["Digest", "Basic", "LDAP-UserBind"]
++        ]));
++
++        $oMorpho->add(new \Formal\Element\Text([
++            "prop"  => "dav_ldap_uri",
++            "label" => "LDAP URI"
++        ]));
++
++        $oMorpho->add(new \Formal\Element\Text([
++            "prop"    => "dav_ldap_dn_template",
++            "label"   => "LDAP DN template",
++            "popover" => [
++                "title"   => "posible placeholder",
++                "content" => "<strong>%n</strong> - username<br /><strong>%u</strong> - user part of username , when it is an email address)<br /><strong>%d</strong> - domain part",
++            ]
++        ]));
++
++        $oMorpho->add(new \Formal\Element\Text([
++            "prop"  => "dav_ldap_displayname_attr",
++            "label" => "LDAP attribute for DisplayName"
++        ]));
++
++        $oMorpho->add(new \Formal\Element\Text([
++            "prop"  => "dav_ldap_email_attr",
++            "label" => "LDAP attribute for eMail"
+         ]));
+ 
+         $oMorpho->add(new \Formal\Element\Password([
