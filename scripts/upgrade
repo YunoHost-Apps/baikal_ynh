@@ -165,20 +165,20 @@ then
 	#=================================================
 	# UPGRADE BAIKAL
 	#=================================================
-	ynh_script_progression --message="Upgrading Baïkal..."
+	# ynh_script_progression --message="Upgrading Baïkal..."
 
-	# Run Baikal upgrade
-	php"${phpversion}" "${final_path}/bin/upgrade.sh"
+	# # Run Baikal upgrade
+	# php"${phpversion}" "${final_path}/bin/upgrade.sh"
 
-	# Cleanup old baikal-admin sessions
-	# since we may have changed owner of the session file
-	grep --files-with-matches --recursive "CSRF_TOKEN|s:" /var/lib/php/sessions | xargs rm -f
+	# # Cleanup old baikal-admin sessions
+	# # since we may have changed owner of the session file
+	# grep --files-with-matches --recursive "CSRF_TOKEN|s:" /var/lib/php/sessions | xargs rm -f
 
-	# Store the config file checksum into the app settings
-	ynh_store_file_checksum --file="$bk_conf"
-	# Remove checksums of old files
-	ynh_delete_file_checksum --file="${final_path}/Specific/config.php"
-	ynh_delete_file_checksum --file="${final_path}/Specific/config.system.php"
+	# # Store the config file checksum into the app settings
+	# ynh_store_file_checksum --file="$bk_conf"
+	# # Remove checksums of old files
+	# ynh_delete_file_checksum --file="${final_path}/Specific/config.php"
+	# ynh_delete_file_checksum --file="${final_path}/Specific/config.system.php"
 fi
 
 #=================================================
