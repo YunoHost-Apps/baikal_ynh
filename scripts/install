@@ -119,7 +119,7 @@ ynh_add_fpm_config
 ynh_script_progression --message="Configuring Baïkal..." --weight=3
 
 ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name \
-    < "${final_path}/Core/Resources/Db/MySQL/db.sql"
+    < "$final_path/Core/Resources/Db/MySQL/db.sql"
 
 #=================================================
 # CONFIGURE BAIKAL
@@ -133,17 +133,7 @@ chown $app: "$final_path/config/baikal.yaml"
 chmod 640 "$final_path/config/baikal.yaml"
 
 # Disable installation
-touch "${final_path}/Specific/INSTALL_DISABLED"
-
-#=================================================
-# SETUP SSOWAT
-#=================================================
-ynh_script_progression --message="Configuring permissions..." --weight=2
-
-# Allow public access on /
-ynh_permission_update --permission="main"  --add="visitors"
-# But restrain on /admin
-ynh_permission_create --permission="admin" --url="/admin" --allowed="all_users"
+touch "$final_path/Specific/INSTALL_DISABLED"
 
 #=================================================
 # RELOAD NGINX
@@ -156,4 +146,4 @@ ynh_systemd_action --service_name=nginx --action=reload
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of Baïkal completed" --last
+ynh_script_progression --message="Installation of $app completed" --last
