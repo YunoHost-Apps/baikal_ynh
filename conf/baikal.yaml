@@ -8,16 +8,16 @@ system:
     admin_passwordhash: __PASSWORD_HASH__
     auth_realm: BaikalDAV
     base_uri: '__PATH__'
-# Auth Backend LDAP-UserBind; LDAP URI
+    # Auth Backend LDAP-UserBind; LDAP URI
     dav_ldap_uri: 'ldap://127.0.0.1/'
-# Auth Backend LDAP-UserBind; Template for userbind
-# %n => username
-# %u => user part of username when it is an email
-# %u => domain part of username when it is an email
+    # Auth Backend LDAP-UserBind; Template for userbind
+    # %n => username
+    # %u => user part of username when it is an email
+    # %u => domain part of username when it is an email
     dav_ldap_dn_template: 'uid=%n,ou=users,dc=yunohost,dc=org'
-# Auth Backend LDAP-UserBind; attribute for displayname
+    # Auth Backend LDAP-UserBind; attribute for displayname
     dav_ldap_displayname_attr: 'cn'
-# Auth Backend LDAP-UserBind; attribute for email
+    # Auth Backend LDAP-UserBind; attribute for email
     dav_ldap_email_attr: 'mail'
 database:
     encryption_key: '__DESKEY__'

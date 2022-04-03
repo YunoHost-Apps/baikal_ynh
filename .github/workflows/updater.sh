@@ -67,11 +67,8 @@ echo "Handling asset at $asset_url"
 # Here we base the source file name upon a unique keyword in the assets url (admin vs. update)
 # Leave $src empty to ignore the asset
 case $asset_url in
-  *"admin"*)
+  *"baikal-"*".zip")
     src="app"
-    ;;
-  *"update"*)
-    src="app-upgrade"
     ;;
   *)
     src=""
