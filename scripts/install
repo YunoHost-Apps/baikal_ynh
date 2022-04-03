@@ -53,7 +53,7 @@ ynh_script_progression --message="Storing installation settings..." --weight=2
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
 ynh_app_setting_set --app=$app --key=encrypt_key --value="$deskey"
-ynh_app_setting_set --app=$app --key=password_hash --value=$password_hash
+ynh_app_setting_set --app=$app --key=password_hash --value="$password_hash"
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -117,7 +117,7 @@ phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 #=================================================
 # INITIALIZE DATABASE
 #=================================================
-ynh_script_progression --message="Configuring Baïkal..." --weight=3
+ynh_script_progression --message="Configuring $app..." --weight=3
 
 ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name \
     < "$final_path/Core/Resources/Db/MySQL/db.sql"
