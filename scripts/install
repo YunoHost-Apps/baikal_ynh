@@ -22,6 +22,9 @@ ynh_abort_if_errors
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
 password=$YNH_APP_ARG_PASSWORD
+timezone=$(cat /etc/timezone)
+deskey=$(ynh_string_random 24)
+password_hash=$(echo -n admin:BaikalDAV:$password | sha256sum | cut -d ' ' -f 1)
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -49,6 +52,8 @@ ynh_script_progression --message="Storing installation settings..." --weight=2
 
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
+ynh_app_setting_set --app=$app --key=encrypt_key --value="$deskey"
+ynh_app_setting_set --app=$app --key=password_hash --value=$password_hash
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -77,6 +82,10 @@ ynh_script_progression --message="Setting up source files..." --weight=8
 ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$final_path"
+
+chmod 750 "$final_path"
+chmod -R o-rwx "$final_path"
+chown -R $app:www-data "$final_path"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -109,36 +118,22 @@ ynh_add_fpm_config
 #=================================================
 ynh_script_progression --message="Configuring Baïkal..." --weight=3
 
-ynh_mysql_connect_as --user=$db_name --password="$db_pwd" --database=$db_name \
+ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name \
     < "${final_path}/Core/Resources/Db/MySQL/db.sql"
 
 #=================================================
 # CONFIGURE BAIKAL
 #=================================================
 
-bk_conf="${final_path}/config/baikal.yaml"
-timezone=$(cat /etc/timezone)
-password_hash=$(echo -n admin:BaikalDAV:$password | sha256sum | cut -d ' ' -f 1)
-ynh_app_setting_set --app=$app --key=password_hash --value=$password_hash
+#bk_conf="${final_path}/config/baikal.yaml"
 path=${path_url%/}
-deskey=$(ynh_string_random 24)
-ynh_app_setting_set --app=$app --key=encrypt_key --value="$deskey"
 
-ynh_add_config --template="../conf/baikal.yaml" --destination="$bk_conf"
+ynh_add_config --template="../conf/baikal.yaml" --destination="$final_path/config/baikal.yaml"
+chown $app: "$final_path/config/baikal.yaml"
+chmod 640 "$final_path/config/baikal.yaml"
 
 # Disable installation
 touch "${final_path}/Specific/INSTALL_DISABLED"
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-
-# Set permissions
-chown -R root: "$final_path"
-chown $app "$final_path/config/baikal.yaml"
-chmod 640 "$final_path/config/baikal.yaml"
 
 #=================================================
 # SETUP SSOWAT
