@@ -22,7 +22,7 @@ final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
 db_user=$db_name
 db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
-phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
+phpversion=$YNH_PHP_VERSION
 password_hash=$(ynh_app_setting_get --app=$app --key=password_hash)
 
 #=================================================
@@ -129,29 +129,29 @@ ynh_add_fpm_config
 # UPGRADE BAIKAL
 #=================================================
 
-if [ "$upgrade_type" == "UPGRADE_APP" ]
-then
-	#=================================================
-	# UPGRADE BAIKAL CONFIGURATION
-	#=================================================
-	ynh_script_progression --message="Upgrading the configuration file..." --weight=2
+# if [ "$upgrade_type" == "UPGRADE_APP" ]
+# then
+# 	#=================================================
+# 	# UPGRADE BAIKAL CONFIGURATION
+# 	#=================================================
+# 	ynh_script_progression --message="Upgrading the configuration file..." --weight=2
 
-	if [ -z "$password_hash" ]; then
-		password=$(ynh_app_setting_get --app=$app --key=password)
-		password_hash=$(echo -n admin:BaikalDAV:$password | md5sum | cut -d ' ' -f 1)
-		ynh_app_setting_set --app=$app --key=password_hash --value=$password_hash
-	fi
+# 	if [ -z "$password_hash" ]; then
+# 		password=$(ynh_app_setting_get --app=$app --key=password)
+# 		password_hash=$(echo -n admin:BaikalDAV:$password | md5sum | cut -d ' ' -f 1)
+# 		ynh_app_setting_set --app=$app --key=password_hash --value=$password_hash
+# 	fi
 
-	bk_conf="${final_path}/config/baikal.yaml"
-	timezone=$(cat /etc/timezone)
-	path=${path_url%/}
-	deskey=$(ynh_app_setting_get --app=$app --key=encrypt_key)
-	ynh_app_setting_set --app=$app --key=encrypt_key --value="$deskey"
+# 	bk_conf="${final_path}/config/baikal.yaml"
+# 	timezone=$(cat /etc/timezone)
+# 	path=${path_url%/}
+# 	deskey=$(ynh_app_setting_get --app=$app --key=encrypt_key)
+# 	ynh_app_setting_set --app=$app --key=encrypt_key --value="$deskey"
 
-	ynh_add_config --template="../conf/baikal.yaml" --destination="$final_path/config/baikal.yaml"
-	chown $app: "$final_path/config/baikal.yaml"
-	chmod 640 "$final_path/config/baikal.yaml"
-fi
+# 	ynh_add_config --template="../conf/baikal.yaml" --destination="$final_path/config/baikal.yaml"
+# 	chown $app: "$final_path/config/baikal.yaml"
+# 	chmod 640 "$final_path/config/baikal.yaml"
+# fi
 
 #=================================================
 # RELOAD NGINX
