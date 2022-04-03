@@ -5,7 +5,7 @@
 #=================================================
 
 # dependencies used by the app
-YNH_PHP_VERSION="7.3"
+YNH_PHP_VERSION="8.0"
 
 pkg_dependencies="php${YNH_PHP_VERSION}-xml php${YNH_PHP_VERSION}-mbstring php${YNH_PHP_VERSION}-mysql"
 

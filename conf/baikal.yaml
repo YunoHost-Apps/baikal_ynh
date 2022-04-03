@@ -25,5 +25,5 @@ database:
     mysql: true
     mysql_host: 'localhost'
     mysql_dbname: '__DB_NAME__'
-    mysql_username: '__DB_NAME__'
+    mysql_username: '__DB_USER__'
     mysql_password: '__DB_PWD__'

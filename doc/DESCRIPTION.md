@@ -1,0 +1,1 @@
+[Baïkal](http://baikal-server.com/) is a CalDAV and CardDAV server, based on sabre/dav, that includes an administration interface for easy management.

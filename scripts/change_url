@@ -94,7 +94,7 @@ fi
 #=================================================
 # UPDATE CONFIGURATION
 #=================================================
-ynh_script_progression --message="Updating Baïkal configuration..."
+ynh_script_progression --message="Updating $app configuration..."
 
 ynh_backup_if_checksum_is_different --file="${final_path}/config/baikal.yaml"
 
@@ -115,4 +115,4 @@ ynh_systemd_action --service_name=nginx --action=reload
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Change of URL completed for Baïkal" --last
+ynh_script_progression --message="Change of URL completed for $app" --last
