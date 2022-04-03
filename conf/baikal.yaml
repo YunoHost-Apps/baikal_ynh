@@ -1,5 +1,5 @@
 system:
-    configured_version: '0.7.0'
+    configured_version: '0.7.1'
     timezone: '__TIMEZONE__'
     card_enabled: true
     cal_enabled: true
