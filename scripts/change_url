@@ -94,7 +94,7 @@ fi
 #=================================================
 # UPDATE CONFIGURATION
 #=================================================
-ynh_script_progression --message="Updating $app configuration..."
+ynh_script_progression --message="Updating $app configuration..." --weight=2
 
 ynh_backup_if_checksum_is_different --file="${final_path}/config/baikal.yaml"
 
@@ -107,7 +107,7 @@ ynh_store_file_checksum --file="${final_path}/config/baikal.yaml"
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading NGINX web server..."
+ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 
 ynh_systemd_action --service_name=nginx --action=reload
 
