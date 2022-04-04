@@ -96,11 +96,11 @@ fi
 #=================================================
 ynh_script_progression --message="Updating $app configuration..." --weight=2
 
-ynh_backup_if_checksum_is_different --file="${final_path}/config/baikal.yaml"
+ynh_backup_if_checksum_is_different --file="$final_path/config/baikal.yaml"
 
-ynh_replace_string --match_string="base_uri: '$old_path'" --replace_string="base_uri: '$new_path'" --target_file="${final_path}/config/baikal.yaml"
+ynh_replace_string --match_string="base_uri: '$old_path'" --replace_string="base_uri: '$new_path'" --target_file="$final_path/config/baikal.yaml"
 
-ynh_store_file_checksum --file="${final_path}/config/baikal.yaml"
+ynh_store_file_checksum --file="$final_path/config/baikal.yaml"
 
 #=================================================
 # GENERIC FINALISATION
