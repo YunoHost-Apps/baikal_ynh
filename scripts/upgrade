@@ -81,20 +81,7 @@ if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
 	ynh_script_progression --message="Upgrading source files..." --weight=3
 
-	# Keep the Specific and config folders intact: https://sabre.io/baikal/upgrade/
-	#mkdir -p "$final_path/config"
-	#temp_folder=$(mktemp -d)
-	#mv "$final_path/Specific" "$temp_folder"
-	#mv "$final_path/config" "$temp_folder"
-	# Download, check integrity, uncompress and patch the source from app.src
 	ynh_setup_source --dest_dir="$final_path" --keep="$final_path/Specific $final_path/config"
-
-	#ynh_secure_remove --file="$final_path/Specific"
-	#ynh_secure_remove --file="$final_path/config"
-
-	#mv "$temp_folder/Specific" "$final_path"
-	#mv "$temp_folder/config" "$final_path"
-	#ynh_secure_remove --file="$temp_folder"
 fi
 
 chmod 750 "$final_path"
