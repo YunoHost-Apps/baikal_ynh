@@ -117,6 +117,8 @@ ynh_add_fpm_config
 # UPGRADE BAIKAL
 #=================================================
 
+# We keep this to allow upgrade the config file in case it needs to be changed.
+
 # if [ "$upgrade_type" == "UPGRADE_APP" ]
 # then
 # 	#=================================================
