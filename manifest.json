@@ -1,6 +1,6 @@
 {
-    "id": "baikal",
     "name": "Baïkal",
+    "id": "baikal",
     "packaging_format": 1,
     "description": {
         "en": "Lightweight CalDAV and CardDAV server",
