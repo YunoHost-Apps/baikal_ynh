@@ -119,25 +119,25 @@ ynh_add_fpm_config
 
 # We keep this to allow upgrade the config file in case it needs to be changed.
 
-# if [ "$upgrade_type" == "UPGRADE_APP" ]
-# then
-# 	#=================================================
-# 	# UPGRADE BAIKAL CONFIGURATION
-# 	#=================================================
-# 	ynh_script_progression --message="Upgrading the configuration file..." --weight=2
+if [ "$upgrade_type" == "UPGRADE_APP" ]
+then
+	#=================================================
+	# UPGRADE BAIKAL CONFIGURATION
+	#=================================================
+	ynh_script_progression --message="Upgrading the configuration file..." --weight=2
 
-# 	if [ -z "$password_hash" ]; then
-# 		password=$(ynh_app_setting_get --app=$app --key=password)
-# 		password_hash=$(echo -n admin:BaikalDAV:$password | md5sum | cut -d ' ' -f 1)
-# 		ynh_app_setting_set --app=$app --key=password_hash --value=$password_hash
-# 	fi
+	if [ -z "$password_hash" ]; then
+		password=$(ynh_app_setting_get --app=$app --key=password)
+		password_hash=$(echo -n admin:BaikalDAV:$password | md5sum | cut -d ' ' -f 1)
+		ynh_app_setting_set --app=$app --key=password_hash --value=$password_hash
+	fi
 
-# 	timezone=$(cat /etc/timezone)
-# 	path=${path_url%/}
-# 	ynh_add_config --template="../conf/baikal.yaml" --destination="$final_path/config/baikal.yaml"
-# 	chown $app: "$final_path/config/baikal.yaml"
-# 	chmod 640 "$final_path/config/baikal.yaml"
-# fi
+	timezone=$(cat /etc/timezone)
+	path=${path_url%/}
+	ynh_add_config --template="../conf/baikal.yaml" --destination="$final_path/config/baikal.yaml"
+	chown $app: "$final_path/config/baikal.yaml"
+	chmod 640 "$final_path/config/baikal.yaml"
+fi
 
 #=================================================
 # RELOAD NGINX
