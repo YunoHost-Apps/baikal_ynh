@@ -138,6 +138,16 @@ chmod 640 "$final_path/config/baikal.yaml"
 touch "$final_path/Specific/INSTALL_DISABLED"
 
 #=================================================
+# SETUP SSOWAT
+#=================================================
+ynh_script_progression --message="Configuring permissions..." --weight=2
+
+# Allow public access on /
+ynh_permission_update --permission="main"  --add="visitors"
+# But restrain on /admin
+ynh_permission_create --permission="admin" --url="/admin" --allowed="all_users"
+
+#=================================================
 # RELOAD NGINX
 #=================================================
 ynh_script_progression --message="Reloading NGINX web server..." --weight=1
