@@ -101,7 +101,7 @@ if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
 	ynh_script_progression --message="Upgrading source files..." --weight=3
 
-	ynh_setup_source --dest_dir="$final_path" --keep="$final_path/Specific $final_path/config"
+	ynh_setup_source --dest_dir="$final_path" --keep="Specific config"
 fi
 
 chmod 750 "$final_path"
