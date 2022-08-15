@@ -21,6 +21,7 @@ Baïkal allows to seamlessly access your contacts and calendars from every devic
 
 **Shipped version:** 0.9.2~ynh1
 
+
 **Demo:** https://demo.yunohost.org/baikal/admin/
 
 ## Screenshots
