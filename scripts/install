@@ -26,12 +26,16 @@ ynh_abort_if_errors
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
 password=$YNH_APP_ARG_PASSWORD
+phpversion=$YNH_PHP_VERSION
 
 app=$YNH_APP_INSTANCE_NAME
 
 timezone=$(cat /etc/timezone)
 encrypt_key=$(ynh_string_random 24)
 password_hash=$(echo -n admin:BaikalDAV:$password | sha256sum | cut -d ' ' -f 1)
+fpm_footprint="low"
+fpm_free_footprint=0
+fpm_usage="low"
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
@@ -59,6 +63,9 @@ ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
 ynh_app_setting_set --app=$app --key=encrypt_key --value="$encrypt_key"
 ynh_app_setting_set --app=$app --key=password_hash --value="$password_hash"
+ynh_app_setting_set --app=$app --key=fpm_footprint --value=$fpm_footprint
+ynh_app_setting_set --app=$app --key=fpm_free_footprint --value=$fpm_free_footprint
+ynh_app_setting_set --app=$app --key=fpm_usage --value=$fpm_usage
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -106,7 +113,7 @@ chown -R $app:www-data "$final_path"
 ynh_script_progression --message="Configuring PHP-FPM..." --weight=2
 
 # Create a dedicated PHP-FPM config
-ynh_add_fpm_config
+ynh_add_fpm_config --phpversion=$phpversion --usage=$fpm_usage --footprint=$fpm_footprint
 phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 
 #=================================================
