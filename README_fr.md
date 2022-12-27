@@ -19,7 +19,7 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 
 Baïkal permet d'accéder de manière transparente à vos contacts et calendriers depuis n'importe quel appareil. Il est compatible avec iOS, macOS, DAVx5 sur Android, Mozilla Thunderbird et toutes les autres applications compatibles CalDAV et CardDAV. Protégez votre vie privée en hébergeant vous-même des calendriers et contacts avec Baïkal.
 
-**Version incluse :** 0.9.2~ynh2
+**Version incluse :** 0.9.3~ynh1
 
 
 **Démo :** https://demo.yunohost.org/baikal/admin/
