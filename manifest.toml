@@ -55,6 +55,7 @@ ram.runtime = "50M"
     main.url = "/"
     admin.url = "/admin"
     admin.allowed= "all_users"
+    admin.show_tile = false
 
     [resources.apt]
     packages = "mariadb-server php8.2-xml php8.2-mbstring php8.2-mysql php8.2-ldap"
