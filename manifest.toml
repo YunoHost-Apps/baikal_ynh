@@ -46,6 +46,7 @@ ram.runtime = "50M"
         [resources.sources.main]
         url = "https://github.com/sabre-io/Baikal/releases/download/0.9.3/baikal-0.9.3.zip"
         sha256 = "d36955ce2e60a03875cf33ad793ddcecfae52096af39de1f2bf709de9f16cb5e"
+        autoupdate.strategy = "latest_github_tag"
 
     [resources.system_user]
 
@@ -55,7 +56,7 @@ ram.runtime = "50M"
     main.url = "/"
     main.auth_header = false
     admin.url = "/admin"
-    admin.allowed= "all_users"
+    admin.allowed= "admins"
     admin.show_tile = false
 
     [resources.apt]
