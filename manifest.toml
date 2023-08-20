@@ -37,7 +37,7 @@ ram.runtime = "50M"
 
     [install.init_main_permission]
     type = "group"
-    default = "visitors"
+    default = "all_users"
 
     [install.password]
     type = "password"
