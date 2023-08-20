@@ -24,7 +24,7 @@ then
 	ynh_script_progression --message="Upgrading source files..." --weight=3
 
 	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$install_dir" --keep="config/baikal.yaml"
+	ynh_setup_source --dest_dir="$install_dir" --keep="Specific config"
 fi
 
 chmod 750 "$install_dir"
