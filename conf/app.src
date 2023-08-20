@@ -1,7 +1,0 @@
-SOURCE_URL=https://github.com/sabre-io/Baikal/releases/download/0.9.3/baikal-0.9.3.zip
-SOURCE_SUM=d36955ce2e60a03875cf33ad793ddcecfae52096af39de1f2bf709de9f16cb5e
-SOURCE_SUM_PRG=sha256sum
-SOURCE_FORMAT=zip
-SOURCE_IN_SUBDIR=true
-SOURCE_FILENAME=
-SOURCE_EXTRACT=true
