@@ -21,7 +21,6 @@ system:
     dav_ldap_email_attr: 'mail'
 database:
     encryption_key: '__ENCRYPT_KEY__'
-    #sqlite_file: "absolute/path/to/Specific/db/db.sqlite"
     mysql: true
     mysql_host: 'localhost'
     mysql_dbname: '__DB_NAME__'
