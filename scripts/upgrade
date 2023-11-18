@@ -42,6 +42,18 @@ ynh_add_fpm_config
 ynh_add_nginx_config
 
 #=================================================
+# SETUP FAIL2BAN
+#=================================================
+
+ynh_script_progression --message="Upgrading fail2ban configuration..." --weight=1
+
+# Create the logfile, required before configuring fail2ban
+touch "/var/log/${domain}-error.log"
+
+# Create a dedicated fail2ban config
+ynh_add_fail2ban_config --logpath="/var/log/${domain}-error.log" --failregex='"PHP message: LDAP Authentication failure" while reading response header from upstream, client: <HOST>'
+
+#=================================================
 # SPECIFIC UPGRADE
 #=================================================
 # UPGRADE BAIKAL CONFIGURATION
