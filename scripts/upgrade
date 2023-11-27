@@ -51,7 +51,7 @@ ynh_script_progression --message="Upgrading fail2ban configuration..." --weight=
 touch "/var/log/${domain}-error.log"
 
 # Create a dedicated fail2ban config
-ynh_add_fail2ban_config --logpath="/var/log/${domain}-error.log" --failregex='"PHP message: LDAP Authentication failure" while reading response header from upstream, client: <HOST>'
+ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failregex='"PHP message: LDAP Authentication failure" while reading response header from upstream, client: <HOST>'
 
 #=================================================
 # SPECIFIC UPGRADE
