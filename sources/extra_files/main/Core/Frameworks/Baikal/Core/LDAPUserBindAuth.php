@@ -75,6 +75,5 @@ class LDAPUserBindAuth extends AbstractExternalAuth {
 
     # WorkAround error_handler in failed bind of LDAP
     public static function exception_error_handler($errno, $errstr, $errfile, $errline) {
-        error_log('LDAP Authentication failure');
     }
 }
