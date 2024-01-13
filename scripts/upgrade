@@ -30,19 +30,13 @@ chmod -R o-rwx "$install_dir"
 chown -R $app:www-data "$install_dir"
 
 #=================================================
-# PHP-FPM CONFIGURATION
+# SYSTEM CONFIGURATION
 #=================================================
 ynh_script_progression --message="Upgrading PHP-FPM configuration..." --weight=2
 
 ynh_add_fpm_config
 
 ynh_add_nginx_config
-
-#=================================================
-# SETUP FAIL2BAN
-#=================================================
-
-ynh_script_progression --message="Upgrading fail2ban configuration..." --weight=1
 
 # Create the logfile, required before configuring fail2ban
 touch "/var/log/${domain}-error.log"

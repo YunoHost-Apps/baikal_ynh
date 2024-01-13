@@ -18,12 +18,6 @@ ynh_remove_nginx_config
 
 ynh_remove_fpm_config
 
-#=================================================
-# REMOVE FAIL2BAN CONFIGURATION
-#=================================================
-
-ynh_script_progression --message="Removing fail2ban configuration..." --weight=1
-
 ynh_remove_fail2ban_config
 
 #=================================================

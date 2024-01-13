@@ -58,7 +58,6 @@ ynh_add_nginx_config
 #=================================================
 # SETUP FAIL2BAN
 #=================================================
-
 ynh_script_progression --message="Configuring fail2ban..." --weight=1
 
 # Create the logfile, required before configuring fail2ban
