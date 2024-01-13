@@ -23,7 +23,6 @@ if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
 	ynh_script_progression --message="Upgrading source files..." --weight=3
 
-	# Download, check integrity, uncompress and patch the source from app.src
 	ynh_setup_source --dest_dir="$install_dir" --keep="config/baikal.yaml"
 fi
 
@@ -35,10 +34,8 @@ chown -R $app:www-data "$install_dir"
 #=================================================
 ynh_script_progression --message="Upgrading PHP-FPM configuration..." --weight=2
 
-# Create a dedicated PHP-FPM config
 ynh_add_fpm_config
 
-# Create a dedicated NGINX config
 ynh_add_nginx_config
 
 #=================================================
@@ -67,7 +64,7 @@ then
 
 	timezone=$(cat /etc/timezone)
 	path=${path%/}
-	ynh_add_config --template="../conf/baikal.yaml" --destination="$install_dir/config/baikal.yaml"
+	ynh_add_config --template="baikal.yaml" --destination="$install_dir/config/baikal.yaml"
 	chown $app: "$install_dir/config/baikal.yaml"
 	chmod 640 "$install_dir/config/baikal.yaml"
 fi

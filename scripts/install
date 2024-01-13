@@ -41,7 +41,6 @@ ynh_app_setting_set --app=$app --key=password_hash --value="$password_hash"
 #=================================================
 ynh_script_progression --message="Setting up source files..." --weight=8
 
-# Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir"
 
 chmod -R o-rwx "$install_dir"
@@ -52,10 +51,8 @@ chown -R $app:www-data "$install_dir"
 #=================================================
 ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
 
-# Create a dedicated PHP-FPM config
 ynh_add_fpm_config
 
-# Create a dedicated NGINX config
 ynh_add_nginx_config
 
 #=================================================
@@ -86,7 +83,7 @@ ynh_script_progression --message="Adding a configuration file..." --weight=1
 
 path=${path%/}
 
-ynh_add_config --template="../conf/baikal.yaml" --destination="$install_dir/config/baikal.yaml"
+ynh_add_config --template="baikal.yaml" --destination="$install_dir/config/baikal.yaml"
 
 chown $app: "$install_dir/config/baikal.yaml"
 chmod 640 "$install_dir/config/baikal.yaml"
