@@ -38,11 +38,6 @@ ram.runtime = "50M"
     type = "path"
     default = "/baikal"
 
-    [install.init_main_permission]
-    type = "group"
-    default = "all_users"
-    help.en = "If you want to access Baikal with CalDAV or CardDAV clients, you need to allow access for visitors."
-
     [install.password]
     type = "password"
 
@@ -58,9 +53,10 @@ ram.runtime = "50M"
 
     [resources.permissions]
     main.url = "/"
+    main.allowed = "visitors"
     main.auth_header = false
     admin.url = "/admin"
-    admin.allowed= "admins"
+    admin.allowed = "admins"
     admin.show_tile = false
 
     [resources.apt]
