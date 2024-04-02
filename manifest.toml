@@ -1,3 +1,5 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/manifest.v2.schema.json
+
 packaging_format = 2
 
 id = "baikal"
@@ -42,10 +44,10 @@ ram.runtime = "50M"
     type = "password"
 
 [resources]
-        [resources.sources.main]
-        url = "https://github.com/sabre-io/Baikal/releases/download/0.9.4/baikal-0.9.4.zip"
-        sha256 = "47a23aa06bc82504e0f216ea81328d9fa00c9c9d9f178d5487ce8960e941e58e"
-        autoupdate.strategy = "latest_github_release"
+    [resources.sources.main]
+    url = "https://github.com/sabre-io/Baikal/releases/download/0.9.4/baikal-0.9.4.zip"
+    sha256 = "47a23aa06bc82504e0f216ea81328d9fa00c9c9d9f178d5487ce8960e941e58e"
+    autoupdate.strategy = "latest_github_release"
 
     [resources.system_user]
 
@@ -60,7 +62,13 @@ ram.runtime = "50M"
     admin.show_tile = false
 
     [resources.apt]
-    packages = "mariadb-server, php8.0-xml, php8.0-mbstring, php8.0-mysql, php8.0-ldap"
+    packages = [
+        "mariadb-server",
+        "php8.0-xml",
+        "php8.0-mbstring",
+        "php8.0-mysql",
+        "php8.0-ldap",
+    ]
 
     [resources.database]
     type = "mysql"
