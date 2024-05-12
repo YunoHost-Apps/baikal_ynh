@@ -29,7 +29,7 @@ Baïkal est un serveur léger CalDAV+CardDAV. Il offre une interface Web étendu
 ## Documentations et ressources
 
 - Site officiel de l’app : <https://sabre.io/baikal/>
-- Documentation officielle utilisateur : <https://github.com/AlexandreMonroche/BaikalGuide>
+- Documentation officielle utilisateur : <https://github.com/criticalsool/Baikal-Guide-FR>
 - Documentation officielle de l’admin : <https://sabre.io/dav/>
 - Dépôt de code officiel de l’app : <https://github.com/sabre-io/Baikal>
 - YunoHost Store : <https://apps.yunohost.org/app/baikal>

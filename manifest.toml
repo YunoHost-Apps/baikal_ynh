@@ -16,7 +16,7 @@ license = "GPL-3.0"
 website = "https://sabre.io/baikal/"
 demo = "https://demo.yunohost.org/baikal/admin/"
 admindoc = "https://sabre.io/dav/"
-userdoc = "https://github.com/AlexandreMonroche/BaikalGuide"
+userdoc = "https://sabre.io/baikal/install/"
 code = "https://github.com/sabre-io/Baikal"
 
 [integration]
