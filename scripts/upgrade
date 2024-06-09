@@ -10,21 +10,11 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# CHECK VERSION
-#=================================================
-
-upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
+ynh_script_progression --message="Upgrading source files..." --weight=3
 
-if [ "$upgrade_type" == "UPGRADE_APP" ]
-then
-	ynh_script_progression --message="Upgrading source files..." --weight=3
-
-	ynh_setup_source --dest_dir="$install_dir" --keep="config/baikal.yaml"
-fi
+ynh_setup_source --dest_dir="$install_dir" --keep="config/baikal.yaml"
 
 chmod -R o-rwx "$install_dir"
 chown -R $app:www-data "$install_dir"
@@ -49,19 +39,15 @@ ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failreg
 #=================================================
 # UPGRADE BAIKAL CONFIGURATION
 #=================================================
+ynh_script_progression --message="Upgrading the configuration file..." --weight=2
 
 # We keep this to allow upgrade the config file in case it needs to be changed.
 
-if [ "$upgrade_type" == "UPGRADE_APP" ]
-then
-	ynh_script_progression --message="Upgrading the configuration file..." --weight=2
-
-	timezone=$(cat /etc/timezone)
-	path=${path%/}
-	ynh_add_config --template="baikal.yaml" --destination="$install_dir/config/baikal.yaml"
-	chown $app: "$install_dir/config/baikal.yaml"
-	chmod 640 "$install_dir/config/baikal.yaml"
-fi
+timezone=$(cat /etc/timezone)
+path=${path%/}
+ynh_add_config --template="baikal.yaml" --destination="$install_dir/config/baikal.yaml"
+chown $app: "$install_dir/config/baikal.yaml"
+chmod 640 "$install_dir/config/baikal.yaml"
 
 #=================================================
 # END OF SCRIPT
