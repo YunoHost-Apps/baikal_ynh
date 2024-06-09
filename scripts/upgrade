@@ -9,6 +9,8 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
+timezone=$(cat /etc/timezone)
+
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
@@ -43,7 +45,6 @@ ynh_script_progression --message="Upgrading the configuration file..." --weight=
 
 # We keep this to allow upgrade the config file in case it needs to be changed.
 
-timezone=$(cat /etc/timezone)
 path=${path%/}
 ynh_add_config --template="baikal.yaml" --destination="$install_dir/config/baikal.yaml"
 chown $app: "$install_dir/config/baikal.yaml"
