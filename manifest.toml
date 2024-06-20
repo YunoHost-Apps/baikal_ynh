@@ -7,7 +7,7 @@ name = "Baïkal"
 description.en = "Lightweight CalDAV and CardDAV server"
 description.fr = "Serveur CalDAV et CardDAV léger"
 
-version = "0.9.4~ynh1"
+version = "0.9.4~ynh2"
 
 maintainers = ["salamandar"]
 
