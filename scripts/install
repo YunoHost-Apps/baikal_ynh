@@ -1,8 +1,6 @@
 #!/bin/bash
 
 #=================================================
-# GENERIC START
-#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
@@ -10,7 +8,7 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# RETRIEVE ARGUMENTS FROM THE MANIFEST
+# INITIALIZE AND STORE SETTINGS
 #=================================================
 
 timezone=$(cat /etc/timezone)
@@ -61,8 +59,6 @@ touch "/var/log/nginx/${domain}-error.log"
 # Create a dedicated fail2ban config
 ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failregex='"PHP message: user \(name stripped-out\) authentication failure for Baikal" while reading response header from upstream, client: <HOST>'
 
-#=================================================
-# SPECIFIC SETUP
 #=================================================
 # INITIALIZE DATABASE
 #=================================================
