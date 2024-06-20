@@ -17,7 +17,7 @@ ynh_script_progression --message="Upgrading source files..." --weight=3
 ynh_setup_source --dest_dir="$install_dir" --keep="config/baikal.yaml"
 
 chmod -R o-rwx "$install_dir"
-chown -R $app:www-data "$install_dir"
+chown -R "$app:www-data" "$install_dir"
 
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS

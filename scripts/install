@@ -15,6 +15,9 @@ timezone=$(cat /etc/timezone)
 encrypt_key=$(ynh_string_random 24)
 password_hash=$(echo -n admin:BaikalDAV:$password | sha256sum | cut -d ' ' -f 1)
 
+ynh_app_setting_set --app="$app" --key="encrypt_key" --value="$encrypt_key"
+ynh_app_setting_set --app="$app" --key="password_hash" --value="$password_hash"
+
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
@@ -27,14 +30,6 @@ then
 fi
 
 #=================================================
-# STORE SETTINGS FROM MANIFEST
-#=================================================
-ynh_script_progression --message="Storing installation settings..." --weight=2
-
-ynh_app_setting_set --app=$app --key=encrypt_key --value="$encrypt_key"
-ynh_app_setting_set --app=$app --key=password_hash --value="$password_hash"
-
-#=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 ynh_script_progression --message="Setting up source files..." --weight=8
@@ -42,7 +37,7 @@ ynh_script_progression --message="Setting up source files..." --weight=8
 ynh_setup_source --dest_dir="$install_dir"
 
 chmod -R o-rwx "$install_dir"
-chown -R $app:www-data "$install_dir"
+chown -R "$app:www-data" "$install_dir"
 
 #=================================================
 # SYSTEM CONFIGURATION
