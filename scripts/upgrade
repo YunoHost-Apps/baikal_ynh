@@ -14,7 +14,7 @@ timezone=$(cat /etc/timezone)
 #=================================================
 ynh_script_progression --message="Upgrading source files..." --weight=3
 
-ynh_setup_source --dest_dir="$install_dir" --keep="config/baikal.yaml"
+ynh_setup_source --dest_dir="$install_dir" --full_replace=1 --keep="config Specific"
 
 chmod -R o-rwx "$install_dir"
 chown -R "$app:www-data" "$install_dir"
