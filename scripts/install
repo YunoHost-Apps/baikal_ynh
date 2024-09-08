@@ -12,72 +12,66 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 timezone=$(timedatectl show --value --property=Timezone)
-encrypt_key=$(ynh_string_random 24)
+encrypt_key=$(ynh_string_random --length=24)
 password_hash=$(echo -n admin:BaikalDAV:$password | sha256sum | cut -d ' ' -f 1)
 
-ynh_app_setting_set --app="$app" --key="encrypt_key" --value="$encrypt_key"
-ynh_app_setting_set --app="$app" --key="password_hash" --value="$password_hash"
+ynh_app_setting_set --key="encrypt_key" --value="$encrypt_key"
+ynh_app_setting_set --key="password_hash" --value="$password_hash"
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
-ynh_script_progression --message="Validating installation parameters..." --weight=1
+ynh_script_progression "Validating installation parameters..."
 
 # Check if .well-known is available for this domain.
 if is_url_handled --domain="$domain" --path="/.well-known/caldav" || is_url_handled --domain="$domain" --path="/.well-known/carddav"
 then
-    ynh_die --message="Another app already uses the domain $domain to serve a calDAV/cardDAV feature. Please use another domain."
+    ynh_die "Another app already uses the domain $domain to serve a calDAV/cardDAV feature. Please use another domain."
 fi
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..." --weight=8
+ynh_script_progression "Setting up source files..."
 
 ynh_setup_source --dest_dir="$install_dir"
-
-chmod -R o-rwx "$install_dir"
-chown -R "$app:www-data" "$install_dir"
 
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
+ynh_script_progression "Adding system configurations related to $app..."
 
-ynh_add_fpm_config
+ynh_config_add_phpfpm
 
-ynh_add_nginx_config
+ynh_config_add_nginx
 
-# Create the logfile, required before configuring fail2ban
 touch "/var/log/nginx/${domain}-error.log"
 
-# Create a dedicated fail2ban config
-ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failregex='"PHP message: user \(name stripped-out\) authentication failure for Baikal" while reading response header from upstream, client: <HOST>'
+ynh_config_add_fail2ban --logpath="/var/log/nginx/${domain}-error.log" --failregex='"PHP message: user \(name stripped-out\) authentication failure for Baikal" while reading response header from upstream, client: <HOST>'
 
 #=================================================
 # INITIALIZE DATABASE
 #=================================================
-ynh_script_progression --message="Configuring $app..." --weight=3
+ynh_script_progression "Configuring $app..."
 
-ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name < "$install_dir/Core/Resources/Db/MySQL/db.sql"
+ynh_mysql_db_shell < "$install_dir/Core/Resources/Db/MySQL/db.sql"
 
 #=================================================
 # CONFIGURE BAIKAL
 #=================================================
-ynh_script_progression --message="Adding a configuration file..." --weight=1
+ynh_script_progression "Adding $app's configuration..."
 
 path=${path%/}
 
-ynh_add_config --template="baikal.yaml" --destination="$install_dir/config/baikal.yaml"
+ynh_config_add --template="baikal.yaml" --destination="$install_dir/config/baikal.yaml"
 
 chown $app: "$install_dir/config/baikal.yaml"
 chmod 640 "$install_dir/config/baikal.yaml"
 
-# Disable installation
 touch "$install_dir/Specific/INSTALL_DISABLED"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression "Installation of $app completed"
