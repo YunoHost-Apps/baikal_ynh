@@ -12,44 +12,38 @@ timezone=$(cat /etc/timezone)
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Upgrading source files..." --weight=3
+ynh_script_progression "Upgrading source files..."
 
-ynh_setup_source --dest_dir="$install_dir" --full_replace=1 --keep="config Specific"
+ynh_setup_source --dest_dir="$install_dir" --full_replace --keep="config Specific"
 
-chmod -R o-rwx "$install_dir"
-chown -R "$app:www-data" "$install_dir"
+#chmod -R o-rwx "$install_dir"
+#chown -R "$app:www-data" "$install_dir"
 
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
+ynh_script_progression "Upgrading system configurations related to $app..."
 
-ynh_add_fpm_config
+ynh_config_add_phpfpm
 
-ynh_add_nginx_config
+ynh_config_add_nginx
 
-# Create the logfile, required before configuring fail2ban
 touch "/var/log/nginx/${domain}-error.log"
 
-# Create a dedicated fail2ban config
-ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failregex='"PHP message: user \(name stripped-out\) authentication failure for Baikal" while reading response header from upstream, client: <HOST>'
+ynh_config_add_fail2ban --logpath="/var/log/nginx/${domain}-error.log" --failregex='"PHP message: user \(name stripped-out\) authentication failure for Baikal" while reading response header from upstream, client: <HOST>'
 
-#=================================================
-# SPECIFIC UPGRADE
 #=================================================
 # UPGRADE BAIKAL CONFIGURATION
 #=================================================
-ynh_script_progression --message="Upgrading the configuration file..." --weight=2
-
-# We keep this to allow upgrade the config file in case it needs to be changed.
+ynh_script_progression "Upgrading the configuration file..."
 
 path=${path%/}
-ynh_add_config --template="baikal.yaml" --destination="$install_dir/config/baikal.yaml"
-chown $app: "$install_dir/config/baikal.yaml"
-chmod 640 "$install_dir/config/baikal.yaml"
+ynh_config_add --template="baikal.yaml" --destination="$install_dir/config/baikal.yaml"
+#chown $app: "$install_dir/config/baikal.yaml"
+#chmod 640 "$install_dir/config/baikal.yaml"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Upgrade of $app completed" --last
+ynh_script_progression "Upgrade of $app completed"
