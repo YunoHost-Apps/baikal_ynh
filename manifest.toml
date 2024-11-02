@@ -7,7 +7,7 @@ name = "Baïkal"
 description.en = "Lightweight CalDAV and CardDAV server"
 description.fr = "Serveur CalDAV et CardDAV léger"
 
-version = "0.9.5~ynh1"
+version = "0.10.0~ynh1"
 
 maintainers = ["salamandar"]
 
@@ -46,8 +46,8 @@ ram.runtime = "50M"
 
 [resources]
     [resources.sources.main]
-    url = "https://github.com/sabre-io/Baikal/releases/download/0.9.5/baikal-0.9.5.zip"
-    sha256 = "9c15f678955b105bdce4e59b31a0deffbacc626204ecb040e5bfb056594de520"
+    url = "https://github.com/sabre-io/Baikal/releases/download/0.10.0/baikal-0.10.0.zip"
+    sha256 = "b09af05a819bcda0d2d4c093dcdefc6ead7a216a25b142e90cb5ea514c6beea1"
     autoupdate.strategy = "latest_github_release"
 
     [resources.system_user]
@@ -66,10 +66,10 @@ ram.runtime = "50M"
     [resources.apt]
     packages = [
         "mariadb-server",
-        "php8.2-xml",
-        "php8.2-mbstring",
-        "php8.2-mysql",
-        "php8.2-ldap",
+        "php8.3-xml",
+        "php8.3-mbstring",
+        "php8.3-mysql",
+        "php8.3-ldap",
     ]
 
     [resources.database]
