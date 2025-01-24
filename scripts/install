@@ -60,6 +60,8 @@ ynh_script_progression "Adding $app's configuration..."
 path=${path%/}
 
 ynh_config_add --template="baikal.yaml" --destination="$install_dir/config/baikal.yaml"
+chown $app: "$install_dir/config/baikal.yaml"
+chmod 640 "$install_dir/config/baikal.yaml"
 
 touch "$install_dir/Specific/INSTALL_DISABLED"
 
