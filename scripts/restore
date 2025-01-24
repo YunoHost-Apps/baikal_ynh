@@ -21,10 +21,6 @@ ynh_script_progression "Restoring the app main directory..."
 
 ynh_restore "$install_dir"
 
-#chmod -R o-rwx "$install_dir"
-#chown -R $app:www-data "$install_dir"
-
-# Set permissions
 chown $app: "$install_dir/config/baikal.yaml"
 chmod 640 "$install_dir/config/baikal.yaml"
 
@@ -54,6 +50,7 @@ ynh_systemctl --action=restart --service=fail2ban
 ynh_script_progression "Reloading NGINX web server and $app's service..."
 
 ynh_systemctl --service="php$php_version-fpm" --action=reload
+
 ynh_systemctl --service=nginx --action=reload
 
 #=================================================

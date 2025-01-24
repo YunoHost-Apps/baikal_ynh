@@ -12,9 +12,6 @@ ynh_script_progression "Upgrading source files..."
 
 ynh_setup_source --dest_dir="$install_dir" --full_replace --keep="config Specific"
 
-#chmod -R o-rwx "$install_dir"
-#chown -R "$app:www-data" "$install_dir"
-
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
@@ -33,10 +30,7 @@ ynh_config_add_fail2ban --logpath="/var/log/nginx/${domain}-error.log" --failreg
 #=================================================
 ynh_script_progression "Upgrading the configuration file..."
 
-path=${path%/}
 ynh_config_add --template="baikal.yaml" --destination="$install_dir/config/baikal.yaml"
-#chown $app: "$install_dir/config/baikal.yaml"
-#chmod 640 "$install_dir/config/baikal.yaml"
 
 #=================================================
 # END OF SCRIPT
