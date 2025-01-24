@@ -5,7 +5,9 @@ EZ editatu eskuz.
 
 # Baïkal YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/baikal.svg)](https://ci-apps.yunohost.org/ci/apps/baikal/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/baikal.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/baikal.maintain.svg)
+[![Integrazio maila](https://apps.yunohost.org/badge/integration/baikal)](https://ci-apps.yunohost.org/ci/apps/baikal/)
+![Funtzionamendu egoera](https://apps.yunohost.org/badge/state/baikal)
+![Mantentze egoera](https://apps.yunohost.org/badge/maintained/baikal)
 
 [![Instalatu Baïkal YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=baikal)
 

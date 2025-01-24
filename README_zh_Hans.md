@@ -5,7 +5,9 @@
 
 # YunoHost 上的 Baïkal
 
-[![集成程度](https://dash.yunohost.org/integration/baikal.svg)](https://ci-apps.yunohost.org/ci/apps/baikal/) ![工作状态](https://ci-apps.yunohost.org/ci/badges/baikal.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/baikal.maintain.svg)
+[![集成程度](https://apps.yunohost.org/badge/integration/baikal)](https://ci-apps.yunohost.org/ci/apps/baikal/)
+![工作状态](https://apps.yunohost.org/badge/state/baikal)
+![维护状态](https://apps.yunohost.org/badge/maintained/baikal)
 
 [![使用 YunoHost 安装 Baïkal](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=baikal)
 

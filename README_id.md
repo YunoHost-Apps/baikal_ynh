@@ -5,7 +5,9 @@ Ini TIDAK boleh diedit dengan tangan.
 
 # Baïkal untuk YunoHost
 
-[![Tingkat integrasi](https://dash.yunohost.org/integration/baikal.svg)](https://ci-apps.yunohost.org/ci/apps/baikal/) ![Status kerja](https://ci-apps.yunohost.org/ci/badges/baikal.status.svg) ![Status pemeliharaan](https://ci-apps.yunohost.org/ci/badges/baikal.maintain.svg)
+[![Tingkat integrasi](https://apps.yunohost.org/badge/integration/baikal)](https://ci-apps.yunohost.org/ci/apps/baikal/)
+![Status kerja](https://apps.yunohost.org/badge/state/baikal)
+![Status pemeliharaan](https://apps.yunohost.org/badge/maintained/baikal)
 
 [![Pasang Baïkal dengan YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=baikal)
 

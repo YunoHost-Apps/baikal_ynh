@@ -5,7 +5,9 @@
 
 # Baïkal для YunoHost
 
-[![Уровень интеграции](https://dash.yunohost.org/integration/baikal.svg)](https://ci-apps.yunohost.org/ci/apps/baikal/) ![Состояние работы](https://ci-apps.yunohost.org/ci/badges/baikal.status.svg) ![Состояние сопровождения](https://ci-apps.yunohost.org/ci/badges/baikal.maintain.svg)
+[![Уровень интеграции](https://apps.yunohost.org/badge/integration/baikal)](https://ci-apps.yunohost.org/ci/apps/baikal/)
+![Состояние работы](https://apps.yunohost.org/badge/state/baikal)
+![Состояние сопровождения](https://apps.yunohost.org/badge/maintained/baikal)
 
 [![Установите Baïkal с YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=baikal)
 
