@@ -7,7 +7,7 @@ name = "Baïkal"
 description.en = "Lightweight CalDAV and CardDAV server"
 description.fr = "Serveur CalDAV et CardDAV léger"
 
-version = "0.9.4~ynh3"
+version = "0.10.1~ynh1"
 
 maintainers = ["salamandar"]
 
@@ -20,7 +20,8 @@ userdoc = "https://sabre.io/baikal/install/"
 code = "https://github.com/sabre-io/Baikal"
 
 [integration]
-yunohost = ">= 11.2"
+yunohost = ">= 11.2.30"
+helpers_version = "2.1"
 architectures = "all"
 multi_instance = false
 
@@ -45,13 +46,14 @@ ram.runtime = "50M"
 
 [resources]
     [resources.sources.main]
-    url = "https://github.com/sabre-io/Baikal/releases/download/0.9.4/baikal-0.9.4.zip"
-    sha256 = "47a23aa06bc82504e0f216ea81328d9fa00c9c9d9f178d5487ce8960e941e58e"
+    url = "https://github.com/sabre-io/Baikal/releases/download/0.10.1/baikal-0.10.1.zip"
+    sha256 = "56eb176d98e68ada5af408beb10ffd97bd09c6b6ee59a398dbceff0be19f4df3"
     autoupdate.strategy = "latest_github_release"
 
     [resources.system_user]
 
     [resources.install_dir]
+    group = "www-data:r-x"
 
     [resources.permissions]
     main.url = "/"
@@ -64,10 +66,10 @@ ram.runtime = "50M"
     [resources.apt]
     packages = [
         "mariadb-server",
-        "php8.0-xml",
-        "php8.0-mbstring",
-        "php8.0-mysql",
-        "php8.0-ldap",
+        "php8.3-xml",
+        "php8.3-mbstring",
+        "php8.3-mysql",
+        "php8.3-ldap",
     ]
 
     [resources.database]

@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -16,30 +12,30 @@ then
 	# Check if .well-known is available for the new domain.
 	if is_url_handled --domain="$new_domain" --path="/.well-known/caldav" || is_url_handled --domain="$new_domain" --path="/.well-known/carddav"
 	then
-		ynh_die --message="Another app already uses the domain $new_domain to serve a calDAV/cardDAV feature. Please use another domain."
+		ynh_die "Another app already uses the domain $new_domain to serve a calDAV/cardDAV feature. Please use another domain."
 	fi
 fi
 
 #=================================================
 # MODIFY URL IN NGINX CONF
 #=================================================
-ynh_script_progression --message="Updating NGINX web server configuration..." --weight=2
+ynh_script_progression "Updating NGINX web server configuration..."
 
-ynh_change_url_nginx_config
+ynh_config_change_url_nginx
 
 #=================================================
 # UPDATE CONFIGURATION
 #=================================================
-ynh_script_progression --message="Updating $app configuration..." --weight=2
+ynh_script_progression "Updating $app configuration..."
 
-ynh_backup_if_checksum_is_different --file="$install_dir/config/baikal.yaml"
+ynh_backup_if_checksum_is_different "$install_dir/config/baikal.yaml"
 
-ynh_replace_string --match_string="base_uri: '$old_path'" --replace_string="base_uri: '$new_path'" --target_file="$install_dir/config/baikal.yaml"
+ynh_replace --match="base_uri: '$old_path'" --replace="base_uri: '$new_path'" --file="$install_dir/config/baikal.yaml"
 
-ynh_store_file_checksum --file="$install_dir/config/baikal.yaml"
+ynh_store_file_checksum "$install_dir/config/baikal.yaml"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Change of URL completed for $app" --last
+ynh_script_progression "Change of URL completed for $app"
