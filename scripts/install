@@ -11,7 +11,7 @@ source /usr/share/yunohost/helpers
 # INITIALIZE AND STORE SETTINGS
 #=================================================
 
-timezone=$(cat /etc/timezone)
+timezone=$(timedatectl show --value --property=Timezone)
 encrypt_key=$(ynh_string_random 24)
 password_hash=$(echo -n admin:BaikalDAV:$password | sha256sum | cut -d ' ' -f 1)
 
