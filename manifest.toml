@@ -20,7 +20,7 @@ userdoc = "https://sabre.io/baikal/install/"
 code = "https://github.com/sabre-io/Baikal"
 
 [integration]
-yunohost = ">= 12.1.17"
+yunohost = ">= 12.1.38"
 helpers_version = "2.1"
 architectures = "all"
 multi_instance = false
