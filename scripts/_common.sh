@@ -1,14 +1,18 @@
 #!/bin/bash
 
 #=================================================
-# COMMON VARIABLES AND CUSTOM HELPERS
+# COMMON VARIABLES
+#=================================================
+
+#=================================================
+# PERSONAL HELPERS
 #=================================================
 
 # Check if an URL is already handled
 # usage: is_url_handled --domain=DOMAIN --path=PATH_URI
 is_url_handled() {
     # Declare an array to define the options of this helper.
-    #local legacy_args=dp
+    local legacy_args=dp
     declare -Ar args_array=( [d]=domain= [p]=path= )
     local domain
     local path
@@ -35,3 +39,11 @@ is_url_handled() {
         return 1
     fi
 }
+
+#=================================================
+# EXPERIMENTAL HELPERS
+#=================================================
+
+#=================================================
+# FUTURE OFFICIAL HELPERS
+#=================================================
