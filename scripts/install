@@ -31,7 +31,7 @@ fi
 ynh_script_progression "Setting up source files..."
 
 ynh_setup_source --dest_dir="$install_dir"
-cp --archive "../sources/extra_files/main/." "$install_dir"
+cp --archive "../sources/main/." "$install_dir"
 
 #=================================================
 # SYSTEM CONFIGURATION
