@@ -18,6 +18,12 @@ class LDAPUserBindAuth extends AbstractExternalAuth {
      */
     private $accountValues;
 
+    /** php8.2+ Creation of dynamic property 
+     *  Baikal\Core\LDAPUserBindAuth::$currentUser is deprecated
+     */
+    protected $currentUser;
+
+
     /**
      * Validates a username and password over ldap
      *
