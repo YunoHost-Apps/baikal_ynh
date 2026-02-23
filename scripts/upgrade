@@ -11,6 +11,7 @@ timezone=$(timedatectl show --value --property=Timezone)
 ynh_script_progression "Upgrading source files..."
 
 ynh_setup_source --dest_dir="$install_dir" --full_replace --keep="config Specific"
+cp --archive "../sources/extra_files/main/." "$install_dir"
 
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
