@@ -35,3 +35,10 @@ is_url_handled() {
         return 1
     fi
 }
+
+_fix_ldap() {
+    cp --archive "../sources/main/." "$install_dir"
+    # Reapply permissions
+    chmod -R u=rwX,g=rX,o=--- "$install_dir"
+    chown -R $app:www-data "$install_dir"
+}
