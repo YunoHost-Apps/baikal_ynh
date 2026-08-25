@@ -1,10 +1,10 @@
 system:
     configured_version: '0.12.1'
     timezone: '__TIMEZONE__'
-    card_enabled: true
-    cal_enabled: true
+    card_enabled: __CARD_ENABLED__
+    cal_enabled: __CAL_ENABLED__
     invite_from: 'noreply@localhost'
-    dav_auth_type: 'LDAP-UserBind'
+    dav_auth_type: '__DAV_AUTH_TYPE__'
     admin_passwordhash: __PASSWORD_HASH__
     auth_realm: BaikalDAV
     base_uri: '__PATH__'
