@@ -8,6 +8,9 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 timezone=$(timedatectl show --value --property=Timezone)
+card_enabled=true
+cal_enabled=true
+dav_auth_type="LDAP-UserBind"
 encrypt_key=$(ynh_string_random --length=24)
 password_hash=$(echo -n admin:BaikalDAV:$password | sha256sum | cut -d ' ' -f 1)
 
