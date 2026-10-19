@@ -7,7 +7,7 @@ name = "Baïkal"
 description.en = "Lightweight CalDAV and CardDAV server"
 description.fr = "Serveur CalDAV et CardDAV léger"
 
-version = "0.12.1~ynh2"
+version = "0.13.0~ynh1"
 
 maintainers = ["salamandar"]
 
@@ -45,8 +45,8 @@ ram.runtime = "50M"
 
 [resources]
     [resources.sources.main]
-    url = "https://github.com/sabre-io/Baikal/releases/download/0.12.1/baikal-0.12.1.zip"
-    sha256 = "0449abb72b151d39d9c08c63cb83a05d9e9adb065b1165ef6786b0b6a13d203c"
+    url = "https://github.com/sabre-io/Baikal/releases/download/0.13.0/baikal-0.13.0.zip"
+    sha256 = "81e74df123230e863f608d228fdd7b9a1a788f60b04d37e6973c302192e83f32"
     autoupdate.strategy = "latest_github_release"
     autoupdate.asset = "^baikal-.*\\.zip$"
 
