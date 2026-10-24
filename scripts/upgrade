@@ -3,7 +3,12 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
-timezone=$(timedatectl show --value --property=Timezone)
+timezone=$(ynh_read_var_in_file --file=$install_dir/config/$app.yaml --key=timezone)
+ynh_app_setting_set --key="timezone" --value="$timezone"
+card_enabled=$(ynh_read_var_in_file --file=$install_dir/config/$app.yaml --key=card_enabled)
+cal_enabled=$(ynh_read_var_in_file --file=$install_dir/config/$app.yaml --key=cal_enabled)
+dav_auth_type=$(ynh_read_var_in_file --file=$install_dir/config/$app.yaml --key=dav_auth_type)
+
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -41,6 +46,8 @@ ynh_script_progression "Upgrading the configuration file..."
 
 path=${path%/}
 ynh_config_add --template="baikal.yaml" --destination="$install_dir/config/baikal.yaml"
+
+
 
 chmod 640 "$install_dir/config/baikal.yaml"
 chown $app:$app "$install_dir/config/baikal.yaml"
